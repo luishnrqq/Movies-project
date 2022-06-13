@@ -12,7 +12,6 @@ function Lista() {
   const [searchValue, setSearchValue] = useState("");
   const [playTrailer, setPlayTrailer] = useState(false);
   const [categories, setCategories] = useState([]);
-  const [pages, setPages] = useState();
   const img_path = "https://image.tmdb.org/t/p/";
   const url = "https://api.themoviedb.org/3";
   
@@ -73,7 +72,8 @@ function Lista() {
     fetchMovies();
     fetchCategories();
    
-  }, [fetchVids()]);
+  }, []);
+  console.log();
 
   return (
     <>
