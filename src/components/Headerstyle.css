@@ -1,0 +1,28 @@
+nav{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    font-family: system-ui -apple-system;
+    position: absolute;
+    left: 1000px;
+}
+
+.nav-list{
+    list-style: none;
+    display: flex;
+}
+
+
+
+li{
+    text-decoration: none;
+}
+
+footer{
+    display: flex;
+    background-color: black;
+    margin-top: 20px;
+    height: 70px;
+    align-items: center;
+    justify-content: space-evenly;
+}
