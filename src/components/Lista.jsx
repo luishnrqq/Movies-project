@@ -26,17 +26,16 @@ function Lista() {
     
     setMovies(data.results);
     setSelectedMovie(data.results[0]);
-    return fetchVids(selectedMovie.id);
+    fetchVids(selectedMovie.id);
   };
 
   const fetchVids = async (id) => {
     const data = await fetch(
-      `${url}/movie/${id}/videos?api_key=3e9594956f7bdfe6a28130cd66f6d581&language=en-US`
-    )
+      `${url}/movie/${id}/videos?api_key=3e9594956f7bdfe6a28130cd66f6d581&language=en-US`)
       .then((res) => res.json())
       .catch((err) => console.log(err));
     const oficial = data.results.find((film) => film.name.includes("Official"));
-
+  
     setTrailer(oficial);
   };
 
@@ -73,7 +72,7 @@ function Lista() {
     fetchCategories();
    
   }, []);
-  console.log();
+  
 
   return (
     <>
@@ -84,8 +83,8 @@ function Lista() {
           backgroundImage: `url(${img_path}original/${selectedMovie.backdrop_path})`,
         }}
       >
-        <div className="hero">
-          {playTrailer ? <YouTube videoId={trailer.key} className='video' /> : null}
+        <div className="hero" key={selectedMovie.name}>
+          {playTrailer  ? <YouTube videoId={trailer.key} className='video' /> : null}
           <button onClick={() => settrailer()} id="hero-button">
             Play trailer
           </button>
