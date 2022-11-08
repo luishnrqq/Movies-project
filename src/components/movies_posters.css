@@ -85,3 +85,10 @@ span{
     background-color: #090B0E;
     color: #ffffff;
 }
+
+#page-section{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}

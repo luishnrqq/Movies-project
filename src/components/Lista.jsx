@@ -1,9 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
-import context from "../context/context";
 import "./movies_posters.css";
 import Header from "./Header";
 import Footer from "./Footer";
 import YouTube from "react-youtube";
+import APIS from "../services/MoviesAPI";
 
 function Lista() {
   const [movies, setMovies] = useState([]);
@@ -12,18 +12,31 @@ function Lista() {
   const [searchValue, setSearchValue] = useState("");
   const [playTrailer, setPlayTrailer] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [pag, setPag] = useState([]);
+  const [currPage, setCurrPage] = useState([]);
   const img_path = "https://image.tmdb.org/t/p/";
   const url = "https://api.themoviedb.org/3";
-  
+
+  const addOne = () => {
+    for (let i = 0; i < 100; i++) {
+      pag[i] = i + 1;
+    }
+  };
+
+  const backToTop = () => {
+    window.scrollTo(0, 0);
+  };
 
   const fetchMovies = async (searchValue) => {
     const type = searchValue
       ? `search/multi?api_key=3e9594956f7bdfe6a28130cd66f6d581&language=en-Us&query=${searchValue}&page=1&include_adult=false`
-      : "discover/movie?api_key=3e9594956f7bdfe6a28130cd66f6d581";
+      : `discover/movie?api_key=3e9594956f7bdfe6a28130cd66f6d581&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=${pag}&with_watch_monetization_types=flatrate`;
     const data = await fetch(`${url}/${type}`)
       .then((response) => response.json())
       .catch((err) => console.log(err));
-    
+
+    // const pages = data.find((f) => console.log(f));
+    console.log(data);
     setMovies(data.results);
     setSelectedMovie(data.results[0]);
     fetchVids(selectedMovie.id);
@@ -31,11 +44,12 @@ function Lista() {
 
   const fetchVids = async (id) => {
     const data = await fetch(
-      `${url}/movie/${id}/videos?api_key=3e9594956f7bdfe6a28130cd66f6d581&language=en-US`)
+      `${url}/movie/${id}/videos?api_key=3e9594956f7bdfe6a28130cd66f6d581&language=en-US`
+    )
       .then((res) => res.json())
       .catch((err) => console.log(err));
     const oficial = data.results.find((film) => film.name.includes("Official"));
-  
+
     setTrailer(oficial);
   };
 
@@ -48,11 +62,10 @@ function Lista() {
     setCategories(genres);
   };
 
-  const findByCategory = (cat_id) =>{ 
-
+  const findByCategory = (cat_id) => {
     const result = movies.filter((filmes) => filmes.genre_ids === cat_id);
     // setMoviesCat(result);
-  }
+  };
 
   const settrailer = () => {
     setPlayTrailer(true);
@@ -70,10 +83,10 @@ function Lista() {
   useEffect(() => {
     fetchMovies();
     fetchCategories();
-   
+    addOne();
   }, []);
-  
 
+  console.log(pag);
   return (
     <>
       <Header />
@@ -84,7 +97,9 @@ function Lista() {
         }}
       >
         <div className="hero" key={selectedMovie.name}>
-          {playTrailer  ? <YouTube videoId={trailer.key} className='video' /> : null}
+          {playTrailer ? (
+            <YouTube videoId={trailer.key} className="video" />
+          ) : null}
           <button onClick={() => settrailer()} id="hero-button">
             Play trailer
           </button>
@@ -96,16 +111,28 @@ function Lista() {
         </div>
       </div>
 
-      <form onSubmit={searchMovies} className='browse-container' >
-       
+      <form onSubmit={searchMovies} className="browse-container">
         <div className="category">
-            <span>Browse by</span>
-        {  <select className="genders" onChange={ ({target})=>   findByCategory(target.value)}   >
-        <option className="gender-options" value='default'>Genre</option>
-          {categories.map((ctgrs) => (
-            <option className="gender-options" value={ctgrs.id}  key={ctgrs.id} >{ctgrs.name}</option>
-          ))}
-        </select> }
+          <span>Browse by</span>
+          {
+            <select
+              className="genders"
+              onChange={({ target }) => findByCategory(target.value)}
+            >
+              <option className="gender-options" value="default">
+                Genre
+              </option>
+              {categories.map((ctgrs) => (
+                <option
+                  className="gender-options"
+                  value={ctgrs.id}
+                  key={ctgrs.id}
+                >
+                  {ctgrs.name}
+                </option>
+              ))}
+            </select>
+          }
         </div>
         <input
           className="search-movie"
@@ -141,8 +168,15 @@ function Lista() {
           )
         )}
       </section>
-      
-      <Footer/>
+      <button onClick={() => backToTop()}>/\</button>
+      <section id="page-section">
+        {pag.slice(0, 8).map((e) => (
+          <>
+            <p id={e}>{e}</p>
+          </>
+        ))}
+      </section>
+      <Footer />
     </>
   );
 }
