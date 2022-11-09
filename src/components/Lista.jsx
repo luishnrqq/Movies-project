@@ -4,6 +4,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import YouTube from "react-youtube";
 import APIS from "../services/MoviesAPI";
+import MovierCars from "./MovierCars";
 
 function Lista() {
   const [movies, setMovies] = useState([]);
@@ -13,6 +14,7 @@ function Lista() {
   const [playTrailer, setPlayTrailer] = useState(false);
   const [categories, setCategories] = useState([]);
   const [pag, setPag] = useState([]);
+  const [test, setTest] = useState([]);
   const [currPage, setCurrPage] = useState([]);
   const img_path = "https://image.tmdb.org/t/p/";
   const url = "https://api.themoviedb.org/3";
@@ -22,6 +24,13 @@ function Lista() {
       pag[i] = i + 1;
     }
   };
+
+  const testAPI = async () => {
+
+    const response = await APIS.fetchMovies();
+    
+    setTest(response.results);
+  }
 
   const backToTop = () => {
     window.scrollTo(0, 0);
@@ -84,9 +93,10 @@ function Lista() {
     fetchMovies();
     fetchCategories();
     addOne();
+    testAPI();
   }, []);
 
-  console.log(pag);
+  console.log(test);
   return (
     <>
       <Header />
@@ -99,13 +109,13 @@ function Lista() {
         <div className="hero" key={selectedMovie.name}>
           {playTrailer ? (
             <YouTube videoId={trailer.key} className="video" />
-          ) : null}
+          ) : <p>Trailer Unavaible</p>}
           <button onClick={() => settrailer()} id="hero-button">
             Play trailer
           </button>
           {playTrailer ? (
             <button onClick={() => closeTrailer()}>Close trailer</button>
-          ) : null}
+          ) : <p>Trailer Unavaible</p>}
           <h1 id="hero-title">{selectedMovie.title}</h1>
           <p className="hero-overview">{selectedMovie.overview}</p>
         </div>
@@ -145,7 +155,7 @@ function Lista() {
         {movies.map((filmes) =>
           filmes.poster_path ? (
             <div>
-              <section
+               <section
                 className="moviePoster"
                 onClick={() => fetchVids(filmes.id)}
               >
@@ -158,7 +168,7 @@ function Lista() {
                 <div>
                   <h3>{filmes.original_title}</h3>
                 </div>
-              </section>
+              </section> 
             </div>
           ) : (
             <div>
