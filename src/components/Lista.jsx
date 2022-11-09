@@ -13,23 +13,18 @@ function Lista() {
   const [searchValue, setSearchValue] = useState("");
   const [playTrailer, setPlayTrailer] = useState(false);
   const [categories, setCategories] = useState([]);
-  const [pag, setPag] = useState([]);
-  const [test, setTest] = useState([]);
-  const [currPage, setCurrPage] = useState([]);
+  const [pag, setPag] = useState(1);
   const img_path = "https://image.tmdb.org/t/p/";
   const url = "https://api.themoviedb.org/3";
 
-  const addOne = () => {
-    for (let i = 0; i < 100; i++) {
-      pag[i] = i + 1;
-    }
-  };
 
-  const testAPI = async () => {
 
-    const response = await APIS.fetchMovies();
-    
-    setTest(response.results);
+  const changePag = () => {
+    setPag(pag + 1);
+  }
+
+  const changePagBack = () => {
+    setPag(pag - 1);
   }
 
   const backToTop = () => {
@@ -45,7 +40,7 @@ function Lista() {
       .catch((err) => console.log(err));
 
     // const pages = data.find((f) => console.log(f));
-    console.log(data);
+    
     setMovies(data.results);
     setSelectedMovie(data.results[0]);
     fetchVids(selectedMovie.id);
@@ -92,11 +87,11 @@ function Lista() {
   useEffect(() => {
     fetchMovies();
     fetchCategories();
-    addOne();
-    testAPI();
-  }, []);
+    changePag();
+    changePagBack();
+  }, fetchMovies());
 
-  console.log(test);
+  console.log(pag);
   return (
     <>
       <Header />
@@ -180,11 +175,7 @@ function Lista() {
       </section>
       <button onClick={() => backToTop()}>/\</button>
       <section id="page-section">
-        {pag.slice(0, 8).map((e) => (
-          <>
-            <p id={e}>{e}</p>
-          </>
-        ))}
+        <button onClick={ ()=> changePagBack()} >Prev</button><button onClick={() =>changePag()}>Next</button>
       </section>
       <Footer />
     </>
