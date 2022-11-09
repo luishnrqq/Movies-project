@@ -92,3 +92,7 @@ span{
     align-items: center;
 
 }
+
+#back-btn{
+    position: static;
+}

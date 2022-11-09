@@ -19,13 +19,13 @@ function Lista() {
 
 
 
-  const changePag = () => {
-    setPag(pag + 1);
-  }
+  // const changePag = () => {
+  //   setPag(pag + 1);
+  // }
 
-  const changePagBack = () => {
-    setPag(pag - 1);
-  }
+  // const changePagBack = () => {
+  //   setPag(pag - 1);
+  // }
 
   const backToTop = () => {
     window.scrollTo(0, 0);
@@ -33,8 +33,8 @@ function Lista() {
 
   const fetchMovies = async (searchValue) => {
     const type = searchValue
-      ? `search/multi?api_key=3e9594956f7bdfe6a28130cd66f6d581&language=en-Us&query=${searchValue}&page=1&include_adult=false`
-      : `discover/movie?api_key=3e9594956f7bdfe6a28130cd66f6d581&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=${pag}&with_watch_monetization_types=flatrate`;
+      ? `search/multi?api_key=5765081a2a932c58200cc8aa4b8eecf9&language=en-Us&query=${searchValue}&page=1&include_adult=false`
+      : `discover/movie?api_key=5765081a2a932c58200cc8aa4b8eecf9&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=${pag}&with_watch_monetization_types=flatrate`;
     const data = await fetch(`${url}/${type}`)
       .then((response) => response.json())
       .catch((err) => console.log(err));
@@ -48,7 +48,7 @@ function Lista() {
 
   const fetchVids = async (id) => {
     const data = await fetch(
-      `${url}/movie/${id}/videos?api_key=3e9594956f7bdfe6a28130cd66f6d581&language=en-US`
+      `${url}/movie/${id}/videos?api_key=5765081a2a932c58200cc8aa4b8eecf9&language=en-US`
     )
       .then((res) => res.json())
       .catch((err) => console.log(err));
@@ -59,7 +59,7 @@ function Lista() {
 
   const fetchCategories = async () => {
     const { genres } = await fetch(
-      "https://api.themoviedb.org/3/genre/movie/list?api_key=3e9594956f7bdfe6a28130cd66f6d581&language=en-US"
+      "https://api.themoviedb.org/3/genre/movie/list?api_key=5765081a2a932c58200cc8aa4b8eecf9&language=en-US"
     )
       .then((res) => res.json())
       .catch((err) => console.log(err));
@@ -87,11 +87,10 @@ function Lista() {
   useEffect(() => {
     fetchMovies();
     fetchCategories();
-    changePag();
-    changePagBack();
-  }, fetchMovies());
+    fetchVids();
+   
+  }, []);
 
-  console.log(pag);
   return (
     <>
       <Header />
@@ -104,13 +103,13 @@ function Lista() {
         <div className="hero" key={selectedMovie.name}>
           {playTrailer ? (
             <YouTube videoId={trailer.key} className="video" />
-          ) : <p>Trailer Unavaible</p>}
+          ) : null}
           <button onClick={() => settrailer()} id="hero-button">
             Play trailer
           </button>
           {playTrailer ? (
             <button onClick={() => closeTrailer()}>Close trailer</button>
-          ) : <p>Trailer Unavaible</p>}
+          ) : null}
           <h1 id="hero-title">{selectedMovie.title}</h1>
           <p className="hero-overview">{selectedMovie.overview}</p>
         </div>
@@ -173,10 +172,10 @@ function Lista() {
           )
         )}
       </section>
-      <button onClick={() => backToTop()}>/\</button>
-      <section id="page-section">
-        <button onClick={ ()=> changePagBack()} >Prev</button><button onClick={() =>changePag()}>Next</button>
-      </section>
+      <button id="back-btn" onClick={() => backToTop()}>/\</button>
+      {/* <section id="page-section">
+        <button disabled={pag < 1 ? true : false} onClick={ ()=>setPag(pag-1)} >Prev</button><button onClick={()=>setPag(pag+1)}>Next</button>
+      </section> */}
       <Footer />
     </>
   );
