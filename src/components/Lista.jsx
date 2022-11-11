@@ -3,8 +3,7 @@ import "./movies_posters.css";
 import Header from "./Header";
 import Footer from "./Footer";
 import YouTube from "react-youtube";
-import APIS from "../services/MoviesAPI";
-import MovierCars from "./MovierCars";
+
 
 function Lista() {
   const [movies, setMovies] = useState([]);
